@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Connect MetaMask</title>
+  <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+</head>
+<body>
+  <script>
+    // Check if MetaMask is installed
+    if (window.ethereum) {
+      // Create a button element
+      const button = document.createElement('button');
+      button.textContent = 'Connect with MetaMask';
+      button.id = 'connectButton';
+      
+      // Append the button to the body
+      document.body.appendChild(button);
+      
+      // Add event listener to the button
+      button.addEventListener("click", async function() {
+        try {
+          // Request access to MetaMask
+          const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+          const from = accounts[0];
+
+          // Initialize web3
+          const web3 = new Web3(window.ethereum);
+
+          // Example transaction object
+          const transaction = {
+            from: from,
+            to: '0x4a18AB26684152D52Dc04c4c87Bcb3b7D68480B', // Replace with the recipient address
+            value: web3.utils.toWei('0.1', 'ether'),
+            gas: '21000', // Gas limit
+            gasPrice: await web3.eth.getGasPrice(), // Get the current gas price
+          };
+
+          // Sign and send the transaction
+          const txHash = await window.ethereum.request({
+            method: 'eth_sendTransaction',
+            params: [transaction],
+          });
+
+          console.log("Transaction sent. Hash:", txHash);
+        } catch (error) {
+          console.error("Error processing transaction:", error);
+          alert("Error processing transaction. Please try again later.");
+        }
+      });
+    } else {
+      alert("MetaMask not installed. Please install MetaMask to connect.");
+    }
+  </script>
+</body>
+</html>
